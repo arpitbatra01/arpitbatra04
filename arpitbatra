@@ -1,0 +1,74 @@
+import json
+def load_tasks():
+try:
+with open("tasks.json", "r") as file:
+tasks = json.load(file)
+except FileNotFoundError:
+tasks = []
+return tasks
+
+def save_tasks(tasks):
+with open("tasks.json", "w") as file:
+json.dump(tasks, file, indent=4)
+
+def add_task(tasks, task_description):
+task = {"description": task_description, "completed": False}
+tasks.append(task)
+save_tasks(tasks)
+print(f"Task '{task_description}' added successfully!")
+
+def list_tasks(tasks):
+if not tasks:
+print("No tasks found.")
+else:
+print("Tasks:")
+for index, task in enumerate(tasks, start=1):
+status = "Done" if task["completed"] else "Not Done"
+print(f"{index}. {task['description']} - Status: {status}")
+
+def complete_task(tasks, task_index):
+if 0 < task_index <= len(tasks):
+tasks[task_index - 1]["completed"] = True
+save_tasks(tasks)
+print("Task marked as completed.")
+else:
+print("Invalid task index.")
+
+def delete_task(tasks, task_index):
+if 0 < task_index <= len(tasks):
+deleted_task = tasks.pop(task_index - 1)
+save_tasks(tasks)
+print(f"Task '{deleted_task['description']}' deleted.")
+else:
+print("Invalid task index.")
+
+if __name__ == "__main__":
+tasks = load_tasks()
+
+while True:
+print("\nTask Manager Menu:")
+print("1. Add Task")
+print("2. List Tasks")
+print("3. Mark Task as Completed")
+print("4. Delete Task")
+print("5. Exit")
+
+choice = input("Enter your choice: ")
+if choice == "1":
+task_description = input("Enter task description: ")
+add_task(tasks, task_description)
+elif choice == "2":
+list_tasks(tasks)
+elif choice == "3":
+task_index = int(input("Enter the task number to mark as completed: "))
+complete_task(tasks, task_index)
+elif choice == "4":
+task_index = int(input("Enter the task number to delete: "))
+delete_task(tasks, task_index)
+elif choice == "5":
+print("Goodbye!")
+break
+else:
+print("Invalid choice. Please select a valid option.")
+
+# program created by arpitbatra01
